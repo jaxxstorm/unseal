@@ -1,13 +1,4 @@
 package: github.com/jaxxstorm/unseal
 import:
-- package: github.com/acidlemon/go-dumper
-- package: github.com/bgentry/speakeasy
-- package: github.com/hashicorp/vault
-  version: ^0.7.0-beta1
-  subpackages:
-  - api
-- package: github.com/urfave/cli
-  version: ^1.19.1
-- package: github.com/jaxxstorm/unseal
-  subpackages:
-  - vault
+- package: github.com/spf13/cobra
+- package: github.com/spf13/viper
