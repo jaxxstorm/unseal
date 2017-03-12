@@ -23,6 +23,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"sync"
 
 	//"github.com/davecgh/go-spew/spew"
 	"github.com/hashicorp/go-cleanhttp"
@@ -63,28 +64,39 @@ var RootCmd = &cobra.Command{
 			panic("Unable to unmarshal hosts")
 		}
 
-		done := make(chan bool, 1)
+		var wg sync.WaitGroup
 
 		for _, h := range hosts {
 
-			go func() {
+			hostName := h.Name
+			hostPort := h.Port
+
+			wg.Add(1)
+
+			go func(hostName string, hostPort int) {
+				defer wg.Done()
 				httpClient := cleanhttp.DefaultPooledClient()
 
 				// format the URL with the passed host and por
-				url := fmt.Sprintf("https://%s:%v", h.Name, h.Port)
+				url := fmt.Sprintf("https://%s:%v", hostName, hostPort)
+				// create a vault client
 				client, err := api.NewClient(&api.Config{Address: url, HttpClient: httpClient})
 				if err != nil {
 					panic(err)
 				}
+				// get the current status
+				init := v.InitStatus(client)
 
-				status := v.VaultStatus(client)
-				fmt.Println(status)
-				done <- true
-			}()
+				if init.Ready == true {
+					fmt.Printf("Host: %s ready to be unsealed\n", hostName)
+				} else {
+					fmt.Printf("Host %s not ready to be unsealed\n", hostName)
+				}
 
-			<-done
+			}(hostName, hostPort)
 
 		}
+		wg.Wait()
 	},
 }
 
