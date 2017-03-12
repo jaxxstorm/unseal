@@ -70,6 +70,7 @@ var RootCmd = &cobra.Command{
 
 			hostName := h.Name
 			hostPort := h.Port
+			key := h.Key
 
 			wg.Add(1)
 
@@ -88,9 +89,17 @@ var RootCmd = &cobra.Command{
 				init := v.InitStatus(client)
 
 				if init.Ready == true {
-					fmt.Printf("Host: %s ready to be unsealed\n", hostName)
+					result, err := client.Sys().Unseal(key)
+					if err != nil {
+						panic(err)
+					}
+					if result.Sealed == true {
+						fmt.Printf("Host: %s unseal progress is now: %v of %v\n", hostName, result.Progress, result.T)
+					} else {
+						fmt.Printf("Host: %s is now unsealed!")
+					}
 				} else {
-					fmt.Printf("Host %s not ready to be unsealed\n", hostName)
+					fmt.Printf("Host: %s not ready to be unsealed\n", hostName)
 				}
 
 			}(hostName, hostPort)
