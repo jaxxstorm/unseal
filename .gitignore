@@ -22,3 +22,9 @@ _testmain.go
 *.exe
 *.test
 *.prof
+
+# Vendor ops
+vendor/
+
+# app specific
+*.yaml
