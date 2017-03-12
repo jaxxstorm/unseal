@@ -60,8 +60,9 @@ var RootCmd = &cobra.Command{
 		// unmarshal config file
 		err := viper.UnmarshalKey("hosts", &hosts)
 
+		// check for valid config file
 		if err != nil {
-			panic("Unable to unmarshal hosts")
+			panic("Unable to unmarshal hosts. Is your config file valid??")
 		}
 
 		var wg sync.WaitGroup
@@ -90,15 +91,24 @@ var RootCmd = &cobra.Command{
 
 				if init.Ready == true {
 					result, err := client.Sys().Unseal(key)
+					// should we keep going here? Don't panic?
 					if err != nil {
 						panic(err)
 					}
+
+					// if it's still sealed, print the progress
 					if result.Sealed == true {
 						fmt.Printf("Host: %s unseal progress is now: %v of %v\n", hostName, result.Progress, result.T)
+						// otherwise, tell us it's unsealed!
 					} else {
 						fmt.Printf("Host: %s is now unsealed!")
 					}
+					// zero out the key
+					// FIXME: is this the best way to do this?
+					// Is it safe?
+					key = ""
 				} else {
+					// sad times, not ready to be unsealed
 					fmt.Printf("Host: %s not ready to be unsealed\n", hostName)
 				}
 
