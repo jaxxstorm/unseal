@@ -23,15 +23,29 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"sync"
 
+	//"github.com/davecgh/go-spew/spew"
+	"github.com/hashicorp/go-cleanhttp"
+	"github.com/hashicorp/vault/api"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	v "github.com/jaxxstorm/unseal/vault"
 )
 
 var cfgFile string
 var unsealKey string
 var vaultHost string
 var vaultPort int
+
+type Host struct {
+	Name string
+	Port int
+	Key  string
+}
+
+var hosts []Host
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
@@ -43,6 +57,46 @@ var RootCmd = &cobra.Command{
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
 
+		// unmarshal config file
+		err := viper.UnmarshalKey("hosts", &hosts)
+
+		if err != nil {
+			panic("Unable to unmarshal hosts")
+		}
+
+		var wg sync.WaitGroup
+
+		for _, h := range hosts {
+
+			hostName := h.Name
+			hostPort := h.Port
+
+			wg.Add(1)
+
+			go func(hostName string, hostPort int) {
+				defer wg.Done()
+				httpClient := cleanhttp.DefaultPooledClient()
+
+				// format the URL with the passed host and por
+				url := fmt.Sprintf("https://%s:%v", hostName, hostPort)
+				// create a vault client
+				client, err := api.NewClient(&api.Config{Address: url, HttpClient: httpClient})
+				if err != nil {
+					panic(err)
+				}
+				// get the current status
+				init := v.InitStatus(client)
+
+				if init.Ready == true {
+					fmt.Printf("Host: %s ready to be unsealed\n", hostName)
+				} else {
+					fmt.Printf("Host %s not ready to be unsealed\n", hostName)
+				}
+
+			}(hostName, hostPort)
+
+		}
+		wg.Wait()
 	},
 }
 
@@ -69,14 +123,16 @@ func init() {
 func initConfig() {
 	if cfgFile != "" { // enable ability to specify config file via flag
 		viper.SetConfigFile(cfgFile)
+	} else {
+		viper.SetConfigName("config") // name of config file (without extension)
+		viper.AddConfigPath("/etc/unseal")
+		viper.AddConfigPath("$HOME/.unseal") // adding home directory as first search path
+		viper.AddConfigPath(".")
+		viper.AutomaticEnv() // read in environment variables that match
 	}
 
-	viper.SetConfigName(".unseal") // name of config file (without extension)
-	viper.AddConfigPath("$HOME")   // adding home directory as first search path
-	viper.AutomaticEnv()           // read in environment variables that match
-
 	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
+	if err := viper.ReadInConfig(); err != nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
 }

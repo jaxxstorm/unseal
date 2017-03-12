@@ -1,5 +1,5 @@
 hash: fb99f00e96f2316b9acbe5892497bbc46e936bd2822dba68e5bf1aef553d63cc
-updated: 2017-03-07T07:24:37.753541001Z
+updated: 2017-03-12T18:55:33.370219633Z
 imports:
 - name: github.com/fatih/structs
   version: a720dfa8df582c51dee1b36feabb906bde1588bd
@@ -55,14 +55,15 @@ imports:
 - name: github.com/spf13/jwalterweatherman
   version: fa7ca7e836cf3a8bb4ebf799f472c12d7e903d66
 - name: github.com/spf13/pflag
-  version: 7b17cc4658ef5ca157b986ea5c0b43af7938532b
+  version: 5ccb023bc27df288a957c5e994cd44fd19619465
 - name: github.com/spf13/viper
   version: 5ed0fc31f7f453625df314d8e66b9791e8d13003
 - name: golang.org/x/net
-  version: 4876518f9e71663000c348837735820161a42df7
+  version: e90d6d0afc4c315a0d87a568ae68577cc15149a0
   subpackages:
   - http2
   - http2/hpack
+  - lex/httplex
 - name: golang.org/x/sys
   version: 8f0908ab3b2457e2e15403d3697c9ef5cb4b57a9
   subpackages:

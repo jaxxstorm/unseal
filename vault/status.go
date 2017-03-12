@@ -4,7 +4,7 @@ import (
 	"github.com/hashicorp/vault/api"
 )
 
-func Ready(client *api.Client) Status {
+func InitStatus(client *api.Client) Status {
 
 	// statuses
 	init, err := client.Sys().InitStatus()
