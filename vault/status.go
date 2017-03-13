@@ -32,7 +32,7 @@ func InitStatus(client *api.Client) Status {
 
 	if seal.Sealed != true {
 		return Status{
-			Ready:  false,
+			Ready:  true,
 			Reason: "Vault is already unsealed",
 		}
 	}
