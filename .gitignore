@@ -25,6 +25,7 @@ _testmain.go
 
 # Vendor ops
 vendor/
+dist
 
 # app specific
 *.yaml

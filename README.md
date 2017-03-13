@@ -50,6 +50,7 @@ A few security considerations before you use this tool.
  - Your unseal key is clearly stored in plaintext in the yaml file. This is clearly a security issue. Please don't store your unseal key in plaintext permanantly.
  - While I've taken steps to overwrite the unseal key in memory, I am not a Golang expert and it may not be fool proof. If you think you can improve the implementation, pull requests will be warmly welcomed
  - I am just getting started with Golang, and therefore there may be errors, security issues and gremlins in this code. Again, pull requests are much appreciated.
+ - There is currently no way of setting HTTPS certificates, so you must trust the certificate presented by the vault API
 
 
 # Building
