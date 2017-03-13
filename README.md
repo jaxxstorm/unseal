@@ -58,5 +58,5 @@ If you want to contribute, we use [glide](https://glide.sh/) for dependency mana
 
  - cloning this repo into `$GOPATH/src/github.com/jaxxstorm/unseal`
  - run `glide install` from the directory
- - run `go build -o unseal main.go
+ - run `go build -o unseal main.go`
 
