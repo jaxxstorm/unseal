@@ -22,7 +22,7 @@ Some of the advantages you might gain over using the vault HTTP API or the stand
 
 # Usage
 
-In order to use unseal, simply create a config file in `$HOME/.unseal/config`. Here's an example:
+In order to use unseal, simply create a config file. Here's an example:
 
 
 ```yaml
@@ -37,6 +37,12 @@ hosts:
     port: 8200
     key: <different base64 encoded key>
 ```
+
+The app will look for the config file in the following directories, in order:
+
+ - `/etc/unseal/config.yaml`
+ - `$HOME/.unseal/config.yaml`
+ - `config.yaml` (in the directory you're running the binary from)
 
 Once that's done, simply run the binary:
 
