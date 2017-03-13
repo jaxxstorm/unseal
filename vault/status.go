@@ -2,6 +2,7 @@ package vault
 
 import (
 	"github.com/hashicorp/vault/api"
+	log "github.com/sirupsen/logrus"
 )
 
 func InitStatus(client *api.Client) Status {
@@ -10,7 +11,11 @@ func InitStatus(client *api.Client) Status {
 	init, err := client.Sys().InitStatus()
 
 	if err != nil {
-		panic(err)
+		log.WithFields(log.Fields{"host": client.Address()}).Error(err)
+		return Status{
+			Ready:  false,
+			Reason: "Error while retrieving initstatus",
+		}
 	}
 	if init == false {
 		return Status{
@@ -22,12 +27,12 @@ func InitStatus(client *api.Client) Status {
 	seal, err := client.Sys().SealStatus()
 
 	if err != nil {
-		panic(err)
+		log.WithFields(log.Fields{"host": client.Address()}).Error(err)
 	}
 
 	if seal.Sealed != true {
 		return Status{
-			Ready:  false,
+			Ready:  true,
 			Reason: "Vault is already unsealed",
 		}
 	}

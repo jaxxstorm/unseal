@@ -25,13 +25,12 @@ import (
 	"os"
 	"sync"
 
-	//"github.com/davecgh/go-spew/spew"
 	"github.com/hashicorp/go-cleanhttp"
 	"github.com/hashicorp/vault/api"
+	v "github.com/jaxxstorm/unseal/vault"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-
-	v "github.com/jaxxstorm/unseal/vault"
 )
 
 var cfgFile string
@@ -84,24 +83,23 @@ var RootCmd = &cobra.Command{
 				// create a vault client
 				client, err := api.NewClient(&api.Config{Address: url, HttpClient: httpClient})
 				if err != nil {
-					panic(err)
+					log.WithFields(log.Fields{"host": hostName, "port": hostPort}).Error(err)
 				}
 				// get the current status
 				init := v.InitStatus(client)
-
 				if init.Ready == true {
 					result, err := client.Sys().Unseal(key)
 					// should we keep going here? Don't panic?
 					if err != nil {
-						panic(err)
+						log.WithFields(log.Fields{"host": hostName}).Error("Error running unseal operation")
 					}
 
 					// if it's still sealed, print the progress
 					if result.Sealed == true {
-						fmt.Printf("Host: %s unseal progress is now: %v of %v\n", hostName, result.Progress, result.T)
+						log.WithFields(log.Fields{"host": hostName, "progress": result.Progress, "threshold": result.T}).Info("Unseal operation performed")
 						// otherwise, tell us it's unsealed!
 					} else {
-						fmt.Printf("Host: %s is now unsealed!")
+						log.WithFields(log.Fields{"host": hostName, "progress": result.Progress, "threshold": result.T}).Info("Vault is unsealed!")
 					}
 					// zero out the key
 					// FIXME: is this the best way to do this?
@@ -109,7 +107,7 @@ var RootCmd = &cobra.Command{
 					key = ""
 				} else {
 					// sad times, not ready to be unsealed
-					fmt.Printf("Host: %s not ready to be unsealed\n", hostName)
+					log.WithFields(log.Fields{"host": hostName}).Error("Vault is not ready to be unsealed")
 				}
 
 			}(hostName, hostPort)
