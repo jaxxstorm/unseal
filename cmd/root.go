@@ -132,10 +132,10 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	// define flags
-	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.unseal.yaml)")
-	RootCmd.PersistentFlags().StringVar(&unsealKey, "key", "", "unseal key (will prompt if not provided)")
-	RootCmd.PersistentFlags().StringVar(&vaultHost, "host", "", "vault host to unseal")
-	RootCmd.PersistentFlags().IntVar(&vaultPort, "port", 8200, "port vault is listening on")
+	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.unseal/config.yaml)")
+	//RootCmd.PersistentFlags().StringVar(&unsealKey, "key", "", "unseal key (will prompt if not provided)")
+	//RootCmd.PersistentFlags().StringVar(&vaultHost, "host", "", "vault host to unseal")
+	//RootCmd.PersistentFlags().IntVar(&vaultPort, "port", 8200, "port vault is listening on")
 }
 
 // initConfig reads in config file and ENV variables if set.
