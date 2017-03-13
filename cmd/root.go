@@ -25,14 +25,12 @@ import (
 	"os"
 	"sync"
 
-	//"github.com/davecgh/go-spew/spew"
 	"github.com/hashicorp/go-cleanhttp"
 	"github.com/hashicorp/vault/api"
+	v "github.com/jaxxstorm/unseal/vault"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-
-	v "github.com/jaxxstorm/unseal/vault"
 )
 
 var cfgFile string
@@ -89,7 +87,6 @@ var RootCmd = &cobra.Command{
 				}
 				// get the current status
 				init := v.InitStatus(client)
-
 				if init.Ready == true {
 					result, err := client.Sys().Unseal(key)
 					// should we keep going here? Don't panic?
@@ -102,7 +99,7 @@ var RootCmd = &cobra.Command{
 						log.WithFields(log.Fields{"host": hostName, "progress": result.Progress, "threshold": result.T}).Info("Unseal operation performed")
 						// otherwise, tell us it's unsealed!
 					} else {
-						log.WithFields(log.Fields{"host": hostName, "progress": result.Progress, "threshold": result.T}).Info("Vault is now unsealed!")
+						log.WithFields(log.Fields{"host": hostName, "progress": result.Progress, "threshold": result.T}).Info("Vault is unsealed!")
 					}
 					// zero out the key
 					// FIXME: is this the best way to do this?
