@@ -50,8 +50,8 @@ var hosts []Host
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
 	Use:   "unseal",
-	Short: "Safely unseal a set of vault servers",
-	Long:  `Unseal allows you to safely unseal a large set of vault servers using the HTTP API.`,
+	Short: "Unseal a set of vault servers",
+	Long:  `Unseal allows you to unseal a large set of vault servers using the HTTP API.`,
 
 	// Uncomment the following line if your bare application
 	// has an action associated with it:

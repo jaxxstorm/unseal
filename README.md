@@ -2,6 +2,12 @@
 
 Unseal is a small, simple go binary that takes a yaml config file and unseals vault servers.
 
+# Warning
+
+This is currently a WIP, and is not considering production ready or in any way safe. The only way to use it is to store unseal keys in plain text.
+
+Future versions will not have this requirements. Use at your own risk
+
 # Why?
 
 When initially deploying vault across multiple sites, you're probably deploying it in a HA config (ie with multiple vault servers in the cluster) and you'll need several people to unseal all of them to get started. This got quite annoying over multiple vault servers and multiple sites, so in order to speed it up, I wrote this little tool.
