@@ -25,8 +25,6 @@ import (
 	"os"
 	"sync"
 
-	"github.com/hashicorp/go-cleanhttp"
-	"github.com/hashicorp/vault/api"
 	v "github.com/jaxxstorm/unseal/vault"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -76,12 +74,9 @@ var RootCmd = &cobra.Command{
 
 			go func(hostName string, hostPort int) {
 				defer wg.Done()
-				httpClient := cleanhttp.DefaultPooledClient()
 
-				// format the URL with the passed host and por
-				url := fmt.Sprintf("https://%s:%v", hostName, hostPort)
 				// create a vault client
-				client, err := api.NewClient(&api.Config{Address: url, HttpClient: httpClient})
+				client, err := v.VaultClient(hostName, hostPort)
 				if err != nil {
 					log.WithFields(log.Fields{"host": hostName, "port": hostPort}).Error(err)
 				}
