@@ -26,6 +26,11 @@ In order to use unseal, simply create a config file. Here's an example:
 
 
 ```yaml
+# optional config containing a path
+# to multiple CA certs to read
+# while unsealing vaults
+capath: "/path/to/ca/certs"
+# An array of keys with vault config
 hosts:
   - name: vault-server-1
     port: 8200
@@ -54,6 +59,18 @@ Host: different-site-vault-server.example.com unseal progress is now: 1 of 3
 ```
 
 Your vault server progress is now 1 of 3. Yay!
+
+## Environment Variables
+
+By default, vault will read some environment variables to do the unseal config. You can find them [here](https://www.vaultproject.io/docs/commands/environment.html)
+
+You can use _some_ of these environment variables if you wish when using unseal.
+
+ - `VAULT_CACERT`: Set this to the path of a CA Cert you wish to use to verify the vault connection. Note, this will use the same CA cert for all vaults
+ - `VAULT_CAPATH`: An alternative to the above CA Path config option.
+ - `VAULT_CLIENT_CERT`: An SSL client cert to use when connecting to your vaults. Note, this will use the same cert for all vaults
+ - `VAULT_CLIENT_KEY`: An SSL client key to use when connecting to your vaults. Note, this will use the same key for all vaults
+ - `VAULT_SKIP_VERIFY`: Skip SSL verification. This is not recommended in production use.
 
 # Considerations
 

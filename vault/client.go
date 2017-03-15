@@ -2,20 +2,29 @@ package vault
 
 import (
 	"fmt"
-	"github.com/hashicorp/go-cleanhttp"
 	"github.com/hashicorp/vault/api"
 )
 
-func VaultClient(hostName string, hostPort int) (*api.Client, error) {
-
-	// init a clean httpClient
-	httpClient := cleanhttp.DefaultPooledClient()
+func VaultClient(hostName string, hostPort int, caPath string) (*api.Client, error) {
 
 	// format the URL with the passed host and por
 	url := fmt.Sprintf("https://%s:%v", hostName, hostPort)
 
-	// create a vault client
-	client, err := api.NewClient(&api.Config{Address: url, HttpClient: httpClient})
+	// create a vault config
+	config := &api.Config{Address: url}
+
+	// read in any environment variables that might be set
+	if err := config.ReadEnvironment(); err != nil {
+		return nil, err
+	}
+
+	// Set the CA path, if it's present
+	if err := config.ConfigureTLS(&api.TLSConfig{CAPath: caPath}); err != nil {
+		return nil, err
+	}
+
+	// create the client
+	client, err := api.NewClient(config)
 	if err != nil {
 		return nil, err
 	}
