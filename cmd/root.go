@@ -36,6 +36,8 @@ var unsealKey string
 var vaultHost string
 var vaultPort int
 
+var caPath string
+
 type Host struct {
 	Name string
 	Port int
@@ -62,6 +64,8 @@ var RootCmd = &cobra.Command{
 			panic("Unable to unmarshal hosts. Is your config file valid??")
 		}
 
+		caPath = viper.GetString("capath")
+
 		var wg sync.WaitGroup
 
 		for _, h := range hosts {
@@ -76,7 +80,7 @@ var RootCmd = &cobra.Command{
 				defer wg.Done()
 
 				// create a vault client
-				client, err := v.VaultClient(hostName, hostPort)
+				client, err := v.VaultClient(hostName, hostPort, caPath)
 				if err != nil {
 					log.WithFields(log.Fields{"host": hostName, "port": hostPort}).Error(err)
 				}
