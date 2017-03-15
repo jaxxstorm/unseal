@@ -2,3 +2,4 @@ package: github.com/jaxxstorm/unseal
 import:
 - package: github.com/spf13/cobra
 - package: github.com/spf13/viper
+- package: github.com/bgentry/speakeasy

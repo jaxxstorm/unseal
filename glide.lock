@@ -1,6 +1,8 @@
-hash: fb99f00e96f2316b9acbe5892497bbc46e936bd2822dba68e5bf1aef553d63cc
-updated: 2017-03-12T18:55:33.370219633Z
+hash: de6accabb0f0b4aaa7eff1fa3d83e170eb72b806c9087c97a122d0cd7636462a
+updated: 2017-03-15T17:04:50.584626518Z
 imports:
+- name: github.com/bgentry/speakeasy
+  version: 675b82c74c0ed12283ee81ba8a534c8982c07b85
 - name: github.com/fatih/structs
   version: a720dfa8df582c51dee1b36feabb906bde1588bd
 - name: github.com/fsnotify/fsnotify
@@ -58,6 +60,16 @@ imports:
   version: 5ccb023bc27df288a957c5e994cd44fd19619465
 - name: github.com/spf13/viper
   version: 5ed0fc31f7f453625df314d8e66b9791e8d13003
+- name: golang.org/x/crypto
+  version: 1f22c0103821b9390939b6776727195525381532
+  subpackages:
+  - cast5
+  - openpgp
+  - openpgp/armor
+  - openpgp/elgamal
+  - openpgp/errors
+  - openpgp/packet
+  - openpgp/s2k
 - name: golang.org/x/net
   version: e90d6d0afc4c315a0d87a568ae68577cc15149a0
   subpackages:
