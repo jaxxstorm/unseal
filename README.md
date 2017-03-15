@@ -4,9 +4,9 @@ Unseal is a small, simple go binary that takes a yaml config file and unseals va
 
 # Warning
 
-This is currently a WIP, and is not considering production ready or in any way safe. The only way to use it is to store unseal keys in plain text.
+This is currently a WIP, and is not considering production ready or in any way safe.
 
-Future versions will not have this requirements. Use at your own risk
+Use at your own risk
 
 # Why?
 
@@ -26,11 +26,6 @@ In order to use unseal, simply create a config file. Here's an example:
 
 
 ```yaml
-# optional config containing a path
-# to multiple CA certs to read
-# while unsealing vaults
-capath: "/path/to/ca/certs"
-# An array of keys with vault config
 hosts:
   - name: vault-server-1
     port: 8200
@@ -59,6 +54,41 @@ Host: different-site-vault-server.example.com unseal progress is now: 1 of 3
 ```
 
 Your vault server progress is now 1 of 3. Yay!
+
+## GPG Support
+
+While you _can_ of course store the unseal keys in plaintext in your `config.yaml` - *it is a really bad idea*. 
+
+With that in mind, Unseal supports GPG decryption. If you've initialized your Vault servers using [PGP/GPG](https://www.vaultproject.io/docs/concepts/pgp-gpg-keybase.html) (and in my opinion, you really _should_) you can specify the base64 encrypted unseal token for your host, and `unseal` will prompt you for your GPG passphrase to decrypt the key.
+
+An example config would look like this:
+```
+gpg: true
+gpgsecretkeyring: "/home/jaxxstorm/.gnupg/secring.gpg"
+gpgpublickeyring: "/home/jaxxstorm/.gnupg/pubring.gpg"
+hosts:
+  - name: test
+  - port: 8200
+  - key: <base 64 encoded gpg encrypted key>
+```
+
+**Note** - if you have a GPG agent running and you've put the unseal keys in your `config.yaml` - anyone with access to your machine can easily decrypt the values without having to know your GPG password. Be warned.
+
+## CAPath
+
+Unseal does not support HTTP API calls, and you probably shouldn't be using Vault over HTTP anyway :)
+
+All your vault servers may use different CA certs, so you can specify a directory with CA certs in it which vault will read and use to attempt to verify the vault server.
+
+Simple specify it like this in your config file:
+
+```yaml
+capath: "/path/to/ca/certs"
+hosts:
+  - name: test
+  - port: 8200
+  - key: <key>
+```
 
 ## Environment Variables
 
