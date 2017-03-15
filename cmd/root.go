@@ -67,7 +67,7 @@ var RootCmd = &cobra.Command{
 
 		// check for valid config file
 		if err != nil {
-			panic("Unable to unmarshal hosts. Is your config file valid??")
+			log.Fatal("Unable to read hosts key in config file: %s", err)
 		}
 
 		caPath = viper.GetString("capath")
@@ -80,7 +80,7 @@ var RootCmd = &cobra.Command{
 			gpgPub = viper.GetString("gpgpublickeyring")
 			gpgPass, err = speakeasy.Ask("Please enter your password: ")
 			if err != nil {
-				panic(err)
+				log.Fatal("Password error")
 			}
 		}
 
@@ -97,7 +97,7 @@ var RootCmd = &cobra.Command{
 			if gpg == true {
 				vaultKey, err = g.Decrypt(gpgPub, gpgSecret, key, gpgPass)
 				if err != nil {
-					panic(err)
+					log.Fatal("GPG Password Error: ", err)
 				}
 			} else {
 				vaultKey = key
@@ -117,7 +117,7 @@ var RootCmd = &cobra.Command{
 				init := v.InitStatus(client)
 				if init.Ready == true {
 					result, err := client.Sys().Unseal(vaultKey)
-					// should we keep going here? Don't panic?
+					// error while unsealing
 					if err != nil {
 						log.WithFields(log.Fields{"host": hostName}).Error("Error running unseal operation")
 					}
@@ -178,6 +178,6 @@ func initConfig() {
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err != nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
+		log.Fatal("Error reading config file: ", err)
 	}
 }
