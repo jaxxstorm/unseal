@@ -25,7 +25,10 @@ import (
 	"os"
 	"sync"
 
+	g "github.com/jaxxstorm/unseal/gpg"
 	v "github.com/jaxxstorm/unseal/vault"
+
+	"github.com/bgentry/speakeasy"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -37,6 +40,9 @@ var vaultHost string
 var vaultPort int
 
 var caPath string
+var gpgPub string
+var gpgSecret string
+var gpgPass string
 
 type Host struct {
 	Name string
@@ -66,6 +72,18 @@ var RootCmd = &cobra.Command{
 
 		caPath = viper.GetString("capath")
 
+		gpg := viper.GetBool("gpg")
+
+		if gpg == true {
+			log.Info("Using GPG")
+			gpgSecret = viper.GetString("gpgsecretkeyring")
+			gpgPub = viper.GetString("gpgpublickeyring")
+			gpgPass, err = speakeasy.Ask("Please enter your password: ")
+			if err != nil {
+				panic(err)
+			}
+		}
+
 		var wg sync.WaitGroup
 
 		for _, h := range hosts {
@@ -73,6 +91,17 @@ var RootCmd = &cobra.Command{
 			hostName := h.Name
 			hostPort := h.Port
 			key := h.Key
+
+			var vaultKey string
+
+			if gpg == true {
+				vaultKey, err = g.Decrypt(gpgPub, gpgSecret, key, gpgPass)
+				if err != nil {
+					panic(err)
+				}
+			} else {
+				vaultKey = key
+			}
 
 			wg.Add(1)
 
@@ -87,7 +116,7 @@ var RootCmd = &cobra.Command{
 				// get the current status
 				init := v.InitStatus(client)
 				if init.Ready == true {
-					result, err := client.Sys().Unseal(key)
+					result, err := client.Sys().Unseal(vaultKey)
 					// should we keep going here? Don't panic?
 					if err != nil {
 						log.WithFields(log.Fields{"host": hostName}).Error("Error running unseal operation")
