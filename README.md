@@ -48,9 +48,15 @@ Once that's done, simply run the binary:
 
 ```bash
 ./unseal
-Host: vault-server-1 unseal progress is now: 1 of 3
-Host: vault-server-2 unseal progress is now: 1 of 3
-Host: different-site-vault-server.example.com unseal progress is now: 1 of 3
+INFO[0007] Unseal operation performed                    host=site1-consulserver-1 progress=2 threshold=3
+INFO[0007] Unseal operation performed                    host=site1-consulserver-2 progress=2 threshold=3
+INFO[0008] Unseal operation performed                    host=site1-consulserver-3 progress=2 threshold=3
+INFO[0008] Vault is unsealed!                            host=site2-consulserver-2 progress=0 threshold=3
+INFO[0008] Vault is unsealed!                            host=site2-consulserver-1 progress=0 threshold=3
+INFO[0008] Vault is unsealed!                            host=site2-consulserver-3 progress=0 threshold=3
+INFO[0008] Vault is unsealed!                            host=site3-consulserver-1 progress=0 threshold=3
+INFO[0008] Vault is unsealed!                            host=site3-consulserver-3 progress=0 threshold=3
+INFO[0008] Vault is unsealed!                            host=site3-consulserver-2 progress=0 threshold=3
 ```
 
 Your vault server progress is now 1 of 3. Yay!
