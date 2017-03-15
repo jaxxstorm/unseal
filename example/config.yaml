@@ -1,0 +1,24 @@
+# Should include all the PEM encoded certs
+# for all your vault servers
+capath: "/etc/pki/tls/cacerts"
+# GPG enabled. Set to false for off
+gpg: true
+# Path to GPG secret keyring
+gpgsecretkeyring: "/Users/jaxxstorm/.gnupg/secring.gpg"
+# Path to GPG public keyring
+gpgpublickeyring: "/Users/jaxxstorm/.gnupg/pubring.gpg"
+# An array of keys containing hosts.
+# Keys and ports can differ per host
+hosts:
+  - name: consulserver1
+    port: 8200
+    key: YV92ZXJ5X2xvbmdfc2FtcGxlX2tleV90aGF0X2lzX25vdF9hbl9hY3R1YWxfdmF1bHRfa2V5Cg
+  - name: consulserver2
+    port: 8200
+    key: YV92ZXJ5X2xvbmdfc2FtcGxlX2tleV90aGF0X2lzX25vdF9hbl9hY3R1YWxfdmF1bHRfa2V5Cg
+  - name: consulserver2
+    port: 8200
+    key: YV92ZXJ5X2xvbmdfc2FtcGxlX2tleV90aGF0X2lzX25vdF9hbl9hY3R1YWxfdmF1bHRfa2V5Cg
+  - name: consulserver3
+    port: 8200
+    key: YV92ZXJ5X2xvbmdfc2FtcGxlX2tleV90aGF0X2lzX25vdF9hbl9hY3R1YWxfdmF1bHRfa2V5Cg
