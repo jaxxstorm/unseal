@@ -26,3 +26,5 @@ _testmain.go
 # Vendor ops
 vendor/
 dist
+
+config.yaml
