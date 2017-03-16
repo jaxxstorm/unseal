@@ -82,7 +82,7 @@ hosts:
 
 ## CAPath
 
-Unseal does not support HTTP API calls, and you probably shouldn't be using Vault over HTTP anyway :)
+Unseal does not support unsecured HTTP API calls, and you probably shouldn't be using Vault over HTTP anyway :)
 
 All your vault servers may use different CA certs, so you can specify a directory with CA certs in it which vault will read and use to attempt to verify the vault server.
 
