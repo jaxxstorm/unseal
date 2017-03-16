@@ -1,8 +1,8 @@
 package vault
 
 import (
+	log "github.com/Sirupsen/logrus"
 	"github.com/hashicorp/vault/api"
-	log "github.com/sirupsen/logrus"
 )
 
 func InitStatus(client *api.Client) Status {

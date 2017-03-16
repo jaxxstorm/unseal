@@ -28,9 +28,9 @@ import (
 	g "github.com/jaxxstorm/unseal/gpg"
 	v "github.com/jaxxstorm/unseal/vault"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/bgentry/speakeasy"
 	"github.com/mitchellh/go-homedir"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )

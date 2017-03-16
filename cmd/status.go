@@ -3,8 +3,8 @@ package cmd
 import (
 	"sync"
 
+	log "github.com/Sirupsen/logrus"
 	v "github.com/jaxxstorm/unseal/vault"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )

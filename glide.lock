@@ -1,5 +1,5 @@
 hash: de6accabb0f0b4aaa7eff1fa3d83e170eb72b806c9087c97a122d0cd7636462a
-updated: 2017-03-15T17:04:50.584626518Z
+updated: 2017-03-16T14:16:55.894170592Z
 imports:
 - name: github.com/bgentry/speakeasy
   version: 675b82c74c0ed12283ee81ba8a534c8982c07b85
@@ -46,6 +46,8 @@ imports:
   version: d1fa2118c12c44e4f5004da216d1efad10cb4924
 - name: github.com/sethgrid/pester
   version: 2c5fb962da6113d0968907fd81dba3ca35151d1c
+- name: github.com/Sirupsen/logrus
+  version: c078b1e43f58d563c74cebe63c85789e76ddb627
 - name: github.com/spf13/afero
   version: 72b31426848c6ef12a7a8e216708cb0d1530f074
   subpackages:
