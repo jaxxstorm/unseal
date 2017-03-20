@@ -14,6 +14,6 @@ var versionCmd = &cobra.Command{
 	Short: "Print the version number of unseal",
 	Long:  `All software has versions. This is unseal's`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("unseal v0.3.1")
+		fmt.Println(RootCmd.Use + " " + Version)
 	},
 }

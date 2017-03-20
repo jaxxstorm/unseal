@@ -10,7 +10,11 @@
 	],
 	"BuildConstraints": "linux,amd64 windows,amd64 darwin,amd64",
 	"ResourcesInclude": "README*",
-	"PackageVersion": "0.3.1",
+  "BuildSettings": {
+    "LdFlagsXVars": {
+      "Version": "main.Version"
+    }
+  },
 	"TaskSettings": {
 		"publish-github": {
 			"apikey": "",
