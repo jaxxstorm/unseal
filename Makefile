@@ -2,7 +2,7 @@ clean:
 	@rm -rf ./dist
 
 build: clean
-	@goxc -pv=v$(version)
+	@goxc -pv=$(version)
 
 version:
 	@echo $(RELEASE)
