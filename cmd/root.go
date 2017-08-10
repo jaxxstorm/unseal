@@ -119,23 +119,27 @@ var RootCmd = &cobra.Command{
 				// get the current status
 				init := v.InitStatus(client)
 				if init.Ready == true {
-					result, err := client.Sys().Unseal(vaultKey)
-					// error while unsealing
-					if err != nil {
-						log.WithFields(log.Fields{"host": hostName}).Error("Error running unseal operation")
-					}
+					if vaultKey != "" {
+						result, err := client.Sys().Unseal(vaultKey)
+						// error while unsealing
+						if err != nil {
+							log.WithFields(log.Fields{"host": hostName}).Error("Error running unseal operation")
+						}
 
-					// if it's still sealed, print the progress
-					if result.Sealed == true {
-						log.WithFields(log.Fields{"host": hostName, "progress": result.Progress, "threshold": result.T}).Info("Unseal operation performed")
-						// otherwise, tell us it's unsealed!
+						// if it's still sealed, print the progress
+						if result.Sealed == true {
+							log.WithFields(log.Fields{"host": hostName, "progress": result.Progress, "threshold": result.T}).Info("Unseal operation performed")
+							// otherwise, tell us it's unsealed!
+						} else {
+							log.WithFields(log.Fields{"host": hostName, "progress": result.Progress, "threshold": result.T}).Info("Vault is unsealed!")
+						}
+						// zero out the key
+						// FIXME: is this the best way to do this?
+						// Is it safe?
+						key = ""
 					} else {
-						log.WithFields(log.Fields{"host": hostName, "progress": result.Progress, "threshold": result.T}).Info("Vault is unsealed!")
+						log.WithFields(log.Fields{"host": hostName}).Error("No Key Provided")
 					}
-					// zero out the key
-					// FIXME: is this the best way to do this?
-					// Is it safe?
-					key = ""
 				} else {
 					// sad times, not ready to be unsealed
 					log.WithFields(log.Fields{"host": hostName}).Error("Vault is not ready to be unsealed")
