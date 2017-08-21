@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"os"
 	"sync"
 
 	log "github.com/Sirupsen/logrus"
@@ -26,6 +27,10 @@ var statusCmd = &cobra.Command{
 		// check for valid config file
 		if err != nil {
 			log.Fatal("Unable to read hosts key in config file: %s", err)
+		}
+
+		if os.Getenv("VAULT_ADDR") != "" {
+			log.Warning("Warning VAULT_ADDR environment variable is set. This will override the hostname in your config file, it's probably not what you want")
 		}
 
 		var wg sync.WaitGroup
