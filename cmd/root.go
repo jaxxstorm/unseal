@@ -87,6 +87,10 @@ var RootCmd = &cobra.Command{
 			}
 		}
 
+		if os.Getenv("VAULT_ADDR") != "" {
+			log.Warning("Warning VAULT_ADDR environment variable is set. This will override the hostname in your config file, it's probably not what you want")
+		}
+
 		var wg sync.WaitGroup
 
 		for _, h := range hosts {
