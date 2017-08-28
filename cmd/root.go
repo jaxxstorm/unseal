@@ -29,8 +29,6 @@ import (
 	v "github.com/jaxxstorm/unseal/vault"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/bgentry/speakeasy"
-	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -41,9 +39,6 @@ var vaultHost string
 var vaultPort int
 
 var caPath string
-var gpgPub string
-var gpgSecret string
-var gpgPass string
 
 type Host struct {
 	Name string
@@ -79,12 +74,6 @@ var RootCmd = &cobra.Command{
 
 		if gpg == true {
 			log.Info("Using GPG")
-			gpgSecret = viper.GetString("gpgsecretkeyring")
-			gpgPub = viper.GetString("gpgpublickeyring")
-			gpgPass, err = speakeasy.Ask("Please enter your password: ")
-			if err != nil {
-				log.Fatal("Password error")
-			}
 		}
 
 		if os.Getenv("VAULT_ADDR") != "" {
@@ -102,7 +91,7 @@ var RootCmd = &cobra.Command{
 			var vaultKey string
 
 			if gpg == true {
-				vaultKey, err = g.Decrypt(gpgPub, gpgSecret, key, gpgPass)
+				vaultKey, err = g.Decrypt(key)
 				if err != nil {
 					log.Fatal("GPG Decrypt Error: ", err)
 				}
@@ -190,10 +179,4 @@ func initConfig() {
 		log.Fatal("Error reading config file: ", err)
 	}
 
-	home, err := homedir.Dir()
-	if err != nil {
-		log.Error("Error getting home directory: ", err)
-	}
-	viper.SetDefault("gpgsecretkeyring", home+"/.gnupg/secring.gpg")
-	viper.SetDefault("gpgpublickeyring", home+"/.gnupg/pubring.gpg")
 }
