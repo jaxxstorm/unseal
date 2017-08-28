@@ -3,50 +3,40 @@ package gpg
 import (
 	"bytes"
 	"encoding/base64"
-	"golang.org/x/crypto/openpgp"
-	"io/ioutil"
-	"os"
+	"os/exec"
 )
 
-func Decrypt(publicKeyring string, secretKeyring string, key string, password string) (string, error) {
+func Decrypt(key string) (string, error) {
 
-	var entity *openpgp.Entity
-	var entityList openpgp.EntityList
+	var cmd exec.Cmd
+	var output bytes.Buffer
 
-	keyringFileBuffer, err := os.Open(secretKeyring)
+	gpgCmd, err := exec.LookPath("gpg")
+
 	if err != nil {
 		return "", err
 	}
 
-	defer keyringFileBuffer.Close()
-	entityList, err = openpgp.ReadKeyRing(keyringFileBuffer)
-	if err != nil {
-		return "", err
-	}
-	entity = entityList[0]
-
-	passphraseByte := []byte(password)
-	entity.PrivateKey.Decrypt(passphraseByte)
-	for _, subkey := range entity.Subkeys {
-		subkey.PrivateKey.Decrypt(passphraseByte)
-	}
+	cmd.Path = gpgCmd
+	cmd.Args = []string{"--decrypt", "--quiet"}
 
 	dec, err := base64.StdEncoding.DecodeString(key)
 	if err != nil {
 		return "", err
 	}
 
-	// Decrypt it with the contents of the private key
-	md, err := openpgp.ReadMessage(bytes.NewBuffer(dec), entityList, nil, nil)
-	if err != nil {
-		return "", err
-	}
-	bytes, err := ioutil.ReadAll(md.UnverifiedBody)
-	if err != nil {
-		return "", err
-	}
-	decStr := string(bytes)
+	// return the reader interface for dec (byte array)
+	d := bytes.NewReader(dec)
 
-	return decStr, nil
+	// pipe d to gpg commands stdin
+	cmd.Stdin = d
+	cmd.Stdout = &output
+
+	if err := cmd.Run(); err != nil {
+		return "", err
+	}
+
+	// return the output from the gpg command
+	return output.String(), nil
 
 }
