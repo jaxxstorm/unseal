@@ -70,8 +70,6 @@ With that in mind, Unseal supports GPG decryption. If you've initialized your Va
 An example config would look like this:
 ```
 gpg: true
-gpgsecretkeyring: "/home/jaxxstorm/.gnupg/secring.gpg"
-gpgpublickeyring: "/home/jaxxstorm/.gnupg/pubring.gpg"
 hosts:
   - name: test
   - port: 8200
@@ -79,6 +77,14 @@ hosts:
 ```
 
 **Note** - if you have a GPG agent running and you've put the unseal keys in your `config.yaml` - anyone with access to your machine can easily decrypt the values without having to know your GPG password. Be warned.
+
+### Troubleshooting
+
+Unseal simply executes the gpg command to decrypt keys. If you're having any issues with GPG support, I'd suggest doing the following:
+
+1) Ensure you can decrypt the keys manually. Use `echo <base64_key> | base64 -D | gpg -dq`. If this doesn't work, unseal won't work either
+2) Ensure you have gpg-agent running, and have a valid `gpg-agent.conf`
+3) Ensure your key is a valid base64 encoded string. Again, `echo <base64_key> | base64 -D | gpg -dq` will verify this
 
 ## CAPath
 
