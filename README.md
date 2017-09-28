@@ -2,11 +2,9 @@
 
 Unseal is a small, simple go binary that takes a yaml config file and unseals vault servers.
 
-# Warning
+# Status
 
-This is currently a WIP, and is not considering production ready or in any way safe.
-
-Use at your own risk
+Unseal will not be accepting any new features. All future work will be rolled into [hookpick](https://github.com/jaxxstorm/hookpick)
 
 # Why?
 
